@@ -1,5 +1,5 @@
 # This is a file copied from Rhoana's rh_aligner[https://github.com/Rhoana/rh_aligner].
-# We have not modified this file for best compatibility.
+# We have not modified this file for best compatibility except a little syntax problems(python2--->python3).
 
 # Raw Author: Harvard VCG Group, Rhoana Project[https://github.com/Rhoana]
 # Author: Horace.Kem[https://github.com/horacekem]
@@ -18,7 +18,7 @@ class BoundingBox:
     to_x = 0
     to_y = 0
 
-    def __init__(self, from_x = (-sys.maxint - 1), to_x = sys.maxint, from_y = (-sys.maxint - 1), to_y = sys.maxint):
+    def __init__(self, from_x=(-sys.maxsize - 1), to_x=sys.maxsize, from_y=(-sys.maxsize - 1), to_y=sys.maxsize):
         self.from_x = float(from_x)
         self.to_x = float(to_x)
         self.from_y = float(from_y)
@@ -88,10 +88,10 @@ class BoundingBox:
 
     @classmethod
     def parse_bbox_lines(cls, bbox_lines):
-        str = ''.join(bbox_lines)
-        str = str[str.find('[') + 1:str.find(']')]
-        str = str.replace(',', ' ')
-        return str
+        str_bbox = ''.join(bbox_lines)
+        str_bbox = str_bbox[str_bbox.find('[') + 1:str_bbox.find(']')]
+        str_bbox = str_bbox.replace(',', ' ')
+        return str_bbox
 
     @classmethod
     def read_bbox_grep(cls, tiles_spec_fname):
@@ -130,7 +130,6 @@ class BoundingBox:
             return ret_val
         return None
 
-
     def union(self, other_bbox):
         return BoundingBox(min(self.from_x, other_bbox.from_x),
                            max(self.to_x, other_bbox.to_x),
@@ -144,7 +143,7 @@ class BoundingBox:
                            min(self.to_y, other_bbox.to_y))
 
     def contains(self, pts):
-        '''return a mask of points that are within the box.  pts.shape = (..., 2)'''
+        # return a mask of points that are within the box.  pts.shape = (..., 2)
         return ((pts[:, 0] >= self.from_x) & (pts[:, 0] <= self.to_x) &
                 (pts[:, 1] >= self.from_y) & (pts[:, 1] <= self.to_y))
 
