@@ -1,3 +1,13 @@
+# This is a script that helps you create h5 files to store the sift features of images read from
+# json files based on Rhoana's rh_aligner[https://github.com/Rhoana/rh_aligner].
+# We modified it to support single-beam file structure and updated syntax to python3.
+
+# You have to run this script in terminal(or the terminal embedded in IDE) because of the sys.argv
+# Run the following command:
+# (Your conda env)user-name@computer-name:~/EM-stitching/source$
+#     python create_sift_features.py json_filename output_h5_folder
+
+# Raw Author: Harvard VCG Group, Rhoana Project[https://github.com/Rhoana]
 # Author: Horace.Kem[https://github.com/horacekem]
 # Group: Biomed ssSEM Lab, SIBET
 
@@ -27,7 +37,7 @@ def compute_tile_sift_features(tile_specification, output_h5_name, initial_sigma
 
     print("Saving {0} sift features at: {1}".format(len(descs), output_h5_name))
     with h5py.File(output_h5_name, 'w') as hf:
-        hf.create_dataset("imageUrl", data=np.array(image_path.encode("utf-8"),dtype='S'))
+        hf.create_dataset("imageUrl", data=np.array(image_path.encode("utf-8"), dtype='S'))
         hf.create_dataset("pts/responses", data=np.array([p.response for p in pts], dtype=np.float32))
         hf.create_dataset("pts/locations", data=np.array([p.pt for p in pts], dtype=np.float32))
         hf.create_dataset("pts/sizes", data=np.array([p.size for p in pts], dtype=np.float32))
@@ -49,7 +59,6 @@ def create_section_sift_features(json_filename, output_h5_folder, initial_sigma=
         output_h5_basename = re.split('\/|\.', image_path)[-2] + "_sift_features.h5"
         output_h5_name = os.path.join(output_h5_folder, output_h5_basename)
         compute_tile_sift_features(tile_specification, output_h5_name, initial_sigma=initial_sigma)
-
 
 
 def main():

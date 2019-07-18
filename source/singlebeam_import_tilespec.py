@@ -7,6 +7,7 @@
 # (Your conda env)user-name@computer-name:~/EM-stitching/source$
 #     python singlebeam_import_tilespec.py sample_folder output_folder sample_name
 
+# Raw Author: Harvard VCG Group, Rhoana Project[https://github.com/Rhoana]
 # Author: Horace.Kem[https://github.com/horacekem]
 # Group: Biomed ssSEM Lab, SIBET
 
@@ -95,12 +96,12 @@ def parse_sample(sample_folder, output_folder, sample_name):
                     "section": section_index,
                     "transforms": [{
                         "className": "mpicbg.trackem2.transform.TranslationModel2D",
-                        "dataString": "{0},{1}".format(tile["tx"],tile["ty"])
+                        "dataString": "{0},{1}".format(tile["tx"], tile["ty"])
                     }],
                     "width": tile["width"],
                     "height": tile["height"],
                     "bbox": [tile["tx"], tile["tx"]+tile["width"],
-                             tile["ty"],tile["ty"]+tile["height"]]
+                             tile["ty"], tile["ty"]+tile["height"]]
                 }
                 export.append(tile_specification)
 
@@ -123,10 +124,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
-
-
-
-
-
-

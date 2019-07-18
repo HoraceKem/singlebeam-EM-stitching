@@ -1,5 +1,6 @@
 # EM-stitching library
 
+# Raw Author: Harvard VCG Group, Rhoana Project[https://github.com/Rhoana]
 # Author: Horace.Kem[https://github.com/horacekem]
 # Group: Biomed ssSEM Lab, SIBET
 
