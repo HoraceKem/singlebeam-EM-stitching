@@ -7,16 +7,16 @@
 # (Your conda env)user-name@computer-name:~/EM-stitching/source$
 #     python singlebeam_import_tilespec.py sample_folder output_folder sample_name
 
-# Author: Horace.Kem[https://github.com/horacekem)
+# Author: Horace.Kem[https://github.com/horacekem]
 # Group: Biomed ssSEM Lab, SIBET
 
 import os
 import sys
 import glob
 import json
-import utils
 import re
 from decimal import *
+import utils
 
 
 def filename_decimal_key(tile):
@@ -87,7 +87,7 @@ def parse_sample(sample_folder, output_folder, sample_name):
                 tile_specification = {
                     "mipmapLevels": {
                         "0": {
-                            "imageUrl": "file://{0}".format(tile["file_full_path"].replace(os.path.sep,'/'))
+                            "imageUrl": "{0}".format(tile["file_full_path"].replace(os.path.sep, '/'))
                         }
                     },
                     "minIntensity": 0.0,
@@ -118,7 +118,7 @@ def main():
     sample_name = sys.argv[3]
 
     utils.create_dir(output_folder)
-    parse_sample(sample_folder,output_folder,sample_name)
+    parse_sample(sample_folder, output_folder, sample_name)
 
 
 if __name__ == '__main__':
