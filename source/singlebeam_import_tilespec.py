@@ -76,6 +76,7 @@ def parse_sample(sample_folder, output_folder, sample_name):
             print("Parsing section_folder:{}".format(section_folder))
             section_index = section_folder.split(os.path.sep)[-1]
             output_json_filename = os.path.join(output_folder, "{0}_Sec{1}.json".format(sample_name, section_index))
+            layer = int(section_index)
 
             if os.path.exists(output_json_filename):
                 print("Output file {} already found, skipping".format(output_json_filename))
@@ -93,10 +94,10 @@ def parse_sample(sample_folder, output_folder, sample_name):
                     },
                     "minIntensity": 0.0,
                     "maxIntensity": 255.0,
-                    "section": section_index,
+                    "layer": layer,
                     "transforms": [{
-                        "className": "mpicbg.trackem2.transform.TranslationModel2D",
-                        "dataString": "{0},{1}".format(tile["tx"], tile["ty"])
+                        "className": "mpicbg.trakem2.transform.TranslationModel2D",
+                        "dataString": "{0} {1}".format(tile["tx"], tile["ty"])
                     }],
                     "width": tile["width"],
                     "height": tile["height"],

@@ -6,6 +6,8 @@
 
 from .utils import path2url, read_dimensions, find_image_files, create_dir, conf_from_file,\
      load_tile_specifications
+from .bounding_box import BoundingBox
+
 
 __all__ = [
           'path2url',
@@ -13,5 +15,6 @@ __all__ = [
           'find_image_files',
           'create_dir',
           'conf_from_file',
-          'load_tile_specifications'
+          'load_tile_specifications',
+          'BoundingBox'
           ]
