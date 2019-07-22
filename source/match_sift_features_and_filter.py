@@ -76,7 +76,7 @@ def distance_after_model(model, point1_l, point2_l):
     return np.sqrt(np.sum(delta ** 2))
 
 
-def match_single_pairs(tilespec1, tilespec2, feature_h5_filename1, feature_h5_filename2, output_json_filename, rod,
+def match_single_pair(tilespec1, tilespec2, feature_h5_filename1, feature_h5_filename2, output_json_filename, rod,
                        iterations, max_epsilon, min_inlier_ratio, min_num_inlier, model_index, max_trust, det_delta):
     logger.info("Loading sift features")
     _, points1, _, _, descriptors1 = load_features(feature_h5_filename1)
@@ -185,11 +185,11 @@ def match_single_sift_features_and_filter(tiles_file, feature_h5_filename1, feat
     tilespec1 = indexed_tilespecs[index_pair[0]]
     tilespec2 = indexed_tilespecs[index_pair[1]]
 
-    match_single_pairs(tilespec1, tilespec2, feature_h5_filename1, feature_h5_filename2, output_json_filename, rod,
+    match_single_pair(tilespec1, tilespec2, feature_h5_filename1, feature_h5_filename2, output_json_filename, rod,
                        iterations, max_epsilon, min_inlier_ratio, min_num_inlier, model_index, max_trust, det_delta)
 
 
-def match_multiple_sift_features_and_fileter(tiles_file, features_h5_filename_list1, features_h5_filename_list2,
+def match_multiple_sift_features_and_filter(tiles_file, features_h5_filename_list1, features_h5_filename_list2,
                                              output_json_filenames, index_pairs, processes_num =1):
     parameters = {}
     rod = parameters.get("rod", 0.92)
@@ -208,7 +208,34 @@ def match_multiple_sift_features_and_fileter(tiles_file, features_h5_filename_li
     pool = mp.Pool(processes=processes_num)
 
     indexed_tilespecs = utils.index_tilespec(utils.load_tile_specifications(tiles_file))
-    pool_results= []
+    pool_results = []
     for i, index_pair in enumerate(index_pairs):
         features_h5_filename1 = features_h5_filename_list1[i]
         features_h5_filename2 = features_h5_filename_list2[i]
+        output_json_filename = output_json_filenames[i]
+
+        logger.info("Matching sift features of tilespecs file: {}, indices: {}".format(tiles_file,index_pair))
+        if index_pair[0] not in indexed_tilespecs:
+            logger.info("The given tile_index {0} was not found in the tilespec: {1}".format(index_pair[0], tiles_file))
+            continue
+        if index_pair[1] not in indexed_tilespecs:
+            logger.info("The given tile_index {0} was not found in the tilespec: {1}".format(index_pair[1], tiles_file))
+            continue
+
+        tilespec1 = indexed_tilespecs[index_pair[0]]
+        tilespec2 = indexed_tilespecs[index_pair[1]]
+
+        res = pool.apply_async(match_single_pair, (tilespec1, tilespec2, features_h5_filename1, features_h5_filename2,
+                                                   output_json_filename, rod, iterations, max_epsilon, min_inlier_ratio,
+                                                   min_num_inlier, model_index, max_trust, det_delta))
+        pool_results.append(res)
+
+        for res in pool_results:
+            res.get()
+
+        pool.close()
+        pool.join()
+
+
+def main():
+    
