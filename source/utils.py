@@ -48,3 +48,10 @@ def load_tile_specifications(json_filename):
     with open(json_filename, 'r') as data_file:
         tile_specifications = json.load(data_file)
     return tile_specifications
+
+
+def index_tilespec(tile_specification):
+    index = {}
+    for ts in tile_specification:
+        index[ts["tile_index"]] = ts
+    return index

@@ -53,6 +53,7 @@ def parse_section(section_folder):
         tile["height"] = image_info["image_size"][0]
         tile["tx"] = image_info["offset_x"]
         tile["ty"] = image_info["offset_y"]
+        tile["tile_index"] = int(tile["file_base_name"].split('_')[1])
         tiles.append(tile)
 
         section_size[0] = max(section_size[0], image_info["image_size"][0] + image_info["offset_y"])
@@ -101,6 +102,7 @@ def parse_sample(sample_folder, output_folder, sample_name):
                     }],
                     "width": tile["width"],
                     "height": tile["height"],
+                    "tile_index": tile["tile_index"],
                     "bbox": [tile["tx"], tile["tx"]+tile["width"],
                              tile["ty"], tile["ty"]+tile["height"]]
                 }

@@ -28,21 +28,21 @@ def compute_tile_sift_features(tile_specification, output_h5_name, initial_sigma
     print("Computing sift features for image: {}".format(image_file_name))
 
     sift = cv2.xfeatures2d.SIFT_create(sigma=initial_sigma)
-    pts, descs = sift.detectAndCompute(img_gray, None)
-    if descs is None:
-        descs = []
-        pts = []
+    points, descriptors = sift.detectAndCompute(img_gray, None)
+    if descriptors is None:
+        descriptors = []
+        points = []
 
-    descs = np.array(descs, dtype=np.uint8)
+    descriptors = np.array(descriptors, dtype=np.uint8)
 
-    print("Saving {0} sift features at: {1}".format(len(descs), output_h5_name))
+    print("Saving {0} sift features at: {1}".format(len(descriptors), output_h5_name))
     with h5py.File(output_h5_name, 'w') as hf:
         hf.create_dataset("imageUrl", data=np.array(image_path.encode("utf-8"), dtype='S'))
-        hf.create_dataset("pts/responses", data=np.array([p.response for p in pts], dtype=np.float32))
-        hf.create_dataset("pts/locations", data=np.array([p.pt for p in pts], dtype=np.float32))
-        hf.create_dataset("pts/sizes", data=np.array([p.size for p in pts], dtype=np.float32))
-        hf.create_dataset("pts/octaves", data=np.array([p.octave for p in pts], dtype=np.float32))
-        hf.create_dataset("descs", data=descs)
+        hf.create_dataset("points/responses", data=np.array([p.response for p in points], dtype=np.float32))
+        hf.create_dataset("points/locations", data=np.array([p.pt for p in points], dtype=np.float32))
+        hf.create_dataset("points/sizes", data=np.array([p.size for p in points], dtype=np.float32))
+        hf.create_dataset("points/octaves", data=np.array([p.octave for p in points], dtype=np.float32))
+        hf.create_dataset("descriptors", data=descriptors)
 
 
 def create_tile_sift_features(json_filename, output_h5_name, index, initial_sigma=1.6):

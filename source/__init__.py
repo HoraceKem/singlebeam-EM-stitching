@@ -5,7 +5,7 @@
 # Group: Biomed ssSEM Lab, SIBET
 
 from .utils import path2url, read_dimensions, find_image_files, create_dir, conf_from_file,\
-     load_tile_specifications
+     load_tile_specifications, index_tilespec
 from .bounding_box import BoundingBox
 
 
@@ -16,5 +16,6 @@ __all__ = [
           'create_dir',
           'conf_from_file',
           'load_tile_specifications',
-          'BoundingBox'
+          'BoundingBox',
+          'index_tilespec'
           ]
