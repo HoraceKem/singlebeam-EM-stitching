@@ -1,3 +1,15 @@
+# This is a script that helps you match sift features and filter
+# based on Rhoana's rh_aligner[https://github.com/Rhoana/rh_aligner].
+# We modified it to support single-beam file structure and updated syntax to python3.
+
+# You have to run this script in terminal(or the terminal embedded in IDE) because of the sys.argv
+# Run the following command:
+# (Your conda env)user-name@computer-name:~/EM-stitching/source$
+#     python match_sift_features_and_filter.py tiles_file features_filename1 features_filename2 \
+#     output_json_filename index_pairs wait_time
+
+# Notice that you have to change the result_path to your own path in line 255
+
 # Raw Author: Harvard VCG Group, Rhoana Project[https://github.com/Rhoana]
 # Author: Horace.Kem[https://github.com/horacekem]
 # Group: Biomed ssSEM Lab, SIBET
