@@ -43,6 +43,7 @@ def parse_image(image_file_path, overlap=0.06):
 def parse_section(section_folder):
     tiles = []
     section_size = [0, 0]
+    tile_index = 1
 
     for image_file in sorted(utils.find_image_files(section_folder)):
         image_info = parse_image(image_file)
@@ -53,8 +54,10 @@ def parse_section(section_folder):
         tile["height"] = image_info["image_size"][0]
         tile["tx"] = image_info["offset_x"]
         tile["ty"] = image_info["offset_y"]
-        tile["tile_index"] = int(tile["file_base_name"].split('_')[1])
+        # tile["tile_index"] = int(tile["file_base_name"].split('_')[1])
+        tile["tile_index"] = tile_index
         tiles.append(tile)
+        tile_index = tile_index+1
 
         section_size[0] = max(section_size[0], image_info["image_size"][0] + image_info["offset_y"])
         section_size[1] = max(section_size[1], image_info["image_size"][1] + image_info["offset_x"])

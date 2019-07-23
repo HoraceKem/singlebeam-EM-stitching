@@ -11,7 +11,9 @@ import h5py
 import numpy as np
 import multiprocessing as mp
 import logging
+import sys
 import re
+import os
 from rh_renderer.models import Transforms
 
 
@@ -77,7 +79,7 @@ def distance_after_model(model, point1_l, point2_l):
 
 
 def match_single_pair(tilespec1, tilespec2, feature_h5_filename1, feature_h5_filename2, output_json_filename, rod,
-                       iterations, max_epsilon, min_inlier_ratio, min_num_inlier, model_index, max_trust, det_delta):
+                      iterations, max_epsilon, min_inlier_ratio, min_num_inlier, model_index, max_trust, det_delta):
     logger.info("Loading sift features")
     _, points1, _, _, descriptors1 = load_features(feature_h5_filename1)
     _, points2, _, _, descriptors2 = load_features(feature_h5_filename2)
@@ -186,11 +188,11 @@ def match_single_sift_features_and_filter(tiles_file, feature_h5_filename1, feat
     tilespec2 = indexed_tilespecs[index_pair[1]]
 
     match_single_pair(tilespec1, tilespec2, feature_h5_filename1, feature_h5_filename2, output_json_filename, rod,
-                       iterations, max_epsilon, min_inlier_ratio, min_num_inlier, model_index, max_trust, det_delta)
+                      iterations, max_epsilon, min_inlier_ratio, min_num_inlier, model_index, max_trust, det_delta)
 
 
 def match_multiple_sift_features_and_filter(tiles_file, features_h5_filename_list1, features_h5_filename_list2,
-                                             output_json_filenames, index_pairs, processes_num =1):
+                                            output_json_filenames, index_pairs, processes_num=10):
     parameters = {}
     rod = parameters.get("rod", 0.92)
     iterations = parameters.get("iterations", 1000)
@@ -214,7 +216,7 @@ def match_multiple_sift_features_and_filter(tiles_file, features_h5_filename_lis
         features_h5_filename2 = features_h5_filename_list2[i]
         output_json_filename = output_json_filenames[i]
 
-        logger.info("Matching sift features of tilespecs file: {}, indices: {}".format(tiles_file,index_pair))
+        logger.info("Matching sift features of tilespecs file: {}, indices: {}".format(tiles_file, index_pair))
         if index_pair[0] not in indexed_tilespecs:
             logger.info("The given tile_index {0} was not found in the tilespec: {1}".format(index_pair[0], tiles_file))
             continue
@@ -238,4 +240,41 @@ def match_multiple_sift_features_and_filter(tiles_file, features_h5_filename_lis
 
 
 def main():
-    
+    result_path = '/home/sem-lab/EM-stitching-result/'
+    tiles_file = os.path.join(result_path, sys.argv[1])
+    features_filename1 = os.path.join(result_path, sys.argv[2])
+    features_filename2 = os.path.join(result_path, sys.argv[3])
+    output_json_filename = os.path.join(result_path, sys.argv[4])
+    index_pairs = sys.argv[5]
+    wait_time = sys.argv[6]
+
+    if len(index_pairs) == 1:
+        utils.wait_after_file(features_filename1, wait_time)
+        utils.wait_after_file(features_filename2, wait_time)
+
+        m = re.match('([0-9]+):([0-9]+)', index_pairs[0])
+        index_pair = (int(m.group(1)), int(m.group(2)))
+        match_single_sift_features_and_filter(tiles_file, features_filename1, features_filename2, output_json_filename,
+                                              index_pair)
+    else:
+        with open(features_filename1, 'r') as features_filenames:
+            features_h5_filename_list1 = [fname.strip() for fname in features_filenames.readlines()]
+        with open(features_filename2, 'r') as features_filenames:
+            features_h5_filename_list2 = [fname.strip() for fname in features_filenames.readlines()]
+        for feature_file in zip(features_h5_filename_list1, features_h5_filename_list2):
+            utils.wait_after_file(feature_file[0], wait_time)
+            utils.wait_after_file(feature_file[1], wait_time)
+        with open(output_json_filename, 'r') as out_filenames:
+            output_json_filenames = [fname.strip() for fname in out_filenames.readlines()]
+
+        for index_pair in index_pairs:
+            m = re.match('([0-9]+):([0-9]+)', index_pair)
+            index_pairs.append = (int(m.group(1)), int(m.group(2)))
+        match_multiple_sift_features_and_filter(tiles_file, features_h5_filename_list1, features_h5_filename_list2,
+                                                output_json_filenames, index_pairs, processes_num=10)
+
+    print("Done.")
+
+
+if __name__ == '__main__':
+    main()

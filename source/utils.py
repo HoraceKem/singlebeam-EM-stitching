@@ -9,6 +9,7 @@ import cv2
 import sys
 import glob
 import json
+import time
 from urllib.parse import urljoin
 from urllib.request import pathname2url
 
@@ -55,3 +56,17 @@ def index_tilespec(tile_specification):
     for ts in tile_specification:
         index[ts["tile_index"]] = ts
     return index
+
+
+def wait_after_file(filename, timeout_seconds):
+    if timeout_seconds > 0:
+        cur_time = time.time()
+        mod_time = os.path.getmtime(filename)
+        end_wait_time = mod_time + timeout_seconds
+        while cur_time < end_wait_time:
+            print("Waiting for file: {}".format(filename))
+            cur_time = time.time()
+            mod_time = os.path.getmtime(filename)
+            end_wait_time = mod_time + timeout_seconds
+            if cur_time < end_wait_time:
+                time.sleep(end_wait_time - cur_time)
