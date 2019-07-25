@@ -161,7 +161,7 @@ def match_single_pair(tilespec1, tilespec2, feature_h5_filename1, feature_h5_fil
             {
                 "p1": {"w": np.array(tilespec1_transform.apply(p1)[:2]).tolist(),
                        "l": np.array([p1[0], p1[1]]).tolist()},
-                "p2": {"w": np.array(tilespec1_transform.apply(p2)[:2]).tolist(),
+                "p2": {"w": np.array(tilespec2_transform.apply(p2)[:2]).tolist(),
                        "l": np.array([p2[0], p2[1]]).tolist()},
             } for p1, p2 in zip(filtered_matches[0], filtered_matches[1])
         ],
@@ -257,8 +257,8 @@ def main():
     features_filename1 = os.path.join(result_path, sys.argv[2])
     features_filename2 = os.path.join(result_path, sys.argv[3])
     output_json_filename = os.path.join(result_path, sys.argv[4])
-    index_pairs = sys.argv[5]
-    wait_time = sys.argv[6]
+    index_pairs = ['2:4']
+    wait_time = 2
 
     if len(index_pairs) == 1:
         utils.wait_after_file(features_filename1, wait_time)
