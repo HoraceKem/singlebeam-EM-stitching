@@ -2,13 +2,7 @@
 # based on Rhoana's rh_aligner[https://github.com/Rhoana/rh_aligner].
 # We modified it to support single-beam file structure and updated syntax to python3.
 
-# You have to run this script in terminal(or the terminal embedded in IDE) because of the sys.argv
-# Run the following command:
-# (Your conda env)user-name@computer-name:~/EM-stitching/source$
-#     python match_sift_features_and_filter.py tiles_file features_filename1 features_filename2 \
-#     output_json_filename index_pairs wait_time
-
-# Notice that you have to change the result_path to your own path in line 255
+# Notice that you have to modified the path in main function to run the file.
 
 # Raw Author: Harvard VCG Group, Rhoana Project[https://github.com/Rhoana]
 # Author: Horace.Kem[https://github.com/horacekem]
@@ -23,11 +17,9 @@ import h5py
 import numpy as np
 import multiprocessing as mp
 import logging
-import sys
 import re
 import os
 from rh_renderer.models import Transforms
-
 
 logger = logging.getLogger(__name__)
 logger.setLevel("DEBUG")
@@ -157,7 +149,7 @@ def match_single_pair(tilespec1, tilespec2, feature_h5_filename1, feature_h5_fil
         "mipmapLevel": 0,
         "url1": tilespec1["mipmapLevels"]["0"]["imageUrl"],
         "url2": tilespec2["mipmapLevels"]["0"]["imageUrl"],
-        "correspondencePointPairs":[
+        "correspondencePointPairs": [
             {
                 "p1": {"w": np.array(tilespec1_transform.apply(p1)[:2]).tolist(),
                        "l": np.array([p1[0], p1[1]]).tolist()},
@@ -252,12 +244,12 @@ def match_multiple_sift_features_and_filter(tiles_file, features_h5_filename_lis
 
 
 def main():
-    result_path = '/home/sem-lab/EM-stitching-result/'
-    tiles_file = os.path.join(result_path, sys.argv[1])
-    features_filename1 = os.path.join(result_path, sys.argv[2])
-    features_filename2 = os.path.join(result_path, sys.argv[3])
-    output_json_filename = os.path.join(result_path, sys.argv[4])
-    index_pairs = ['2:4']
+    result_path = '/home/horacekem/Desktop/Stitching/singlebeam/compute_data/down_10/'
+    tiles_file = os.path.join(result_path, 'tile_spec/cc_Sec001.json')
+    features_filename1 = os.path.join(result_path, 'sift/001/Tile_r2-c2_001_sift_features.h5')
+    features_filename2 = os.path.join(result_path, 'sift/001/Tile_r2-c1_001_sift_features.h5')
+    output_json_filename = os.path.join(result_path, 'matched_sift/matched_sift_4_3.json')
+    index_pairs = ['4:3']
     wait_time = 2
 
     if len(index_pairs) == 1:

@@ -1,3 +1,6 @@
+# This is a file copied from Rhoana's rh_aligner[https://github.com/Rhoana/rh_aligner].
+# We have not modified this file for best compatibility except a little syntax problems(python2--->python3).
+
 # Raw Author: Harvard VCG Group, Rhoana Project[https://github.com/Rhoana]
 # Author: Horace.Kem[https://github.com/horacekem]
 # Group: Biomed ssSEM Lab, SIBET
@@ -37,10 +40,10 @@ def create_new_tilespec(old_tilespec_filename, rotations, translations, centers,
 
         old_bbox = [float(d) for d in ts["bbox"]]
         old_bbox_points = [
-            np.array([np.array(old_bbox[0]), np.array(old_bbox[2])]),
-            np.array([np.array(old_bbox[1]), np.array(old_bbox[2])]),
-            np.array([np.array(old_bbox[0]), np.array(old_bbox[3])]),
-            np.array([np.array(old_bbox[1]), np.array(old_bbox[3])])
+            np.array([np.array([old_bbox[0]]), np.array([old_bbox[2]])]),
+            np.array([np.array([old_bbox[1]]), np.array([old_bbox[2]])]),
+            np.array([np.array([old_bbox[0]]), np.array([old_bbox[3]])]),
+            np.array([np.array([old_bbox[1]]), np.array([old_bbox[3]])])
         ]
         print(np.asarray((old_bbox_points[1] - old_bbox_points[0]).T))
 
@@ -55,7 +58,7 @@ def create_new_tilespec(old_tilespec_filename, rotations, translations, centers,
         print(transformed_points[0])
 
         delta = np.asarray(transformed_points[0].T)[0]
-        x, y = np.asarray((old_bbox_points[1] - old_bbox_points[0]).T)
+        x, y = np.asarray((old_bbox_points[1] - old_bbox_points[0]).T)[0]
         new_x, new_y = np.asarray(transformed_points[1].T)[0]
         k = (y * (new_x - delta[0]) - x * (new_y - delta[1])) / (x ** 2 + y ** 2)
         h1 = (new_x - delta[0] - k * y) / x

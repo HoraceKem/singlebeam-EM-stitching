@@ -70,3 +70,18 @@ def wait_after_file(filename, timeout_seconds):
             end_wait_time = mod_time + timeout_seconds
             if cur_time < end_wait_time:
                 time.sleep(end_wait_time - cur_time)
+
+
+def parse_range(s):
+    result = set()
+    if s is not None and len(s) != 0:
+        for part in s.split(','):
+            x = part.split('-')
+            result.update(range(int(x[0]), int(x[-1]) + 1))
+    return sorted(result)
+
+
+def write_list_to_file(file_name, lst):
+    with open(file_name, 'w') as out_file:
+        for item in lst:
+            out_file.write("%s\n" % item)
